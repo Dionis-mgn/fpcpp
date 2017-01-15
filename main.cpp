@@ -1,13 +1,15 @@
-#include <string>
+#include <algorithm>
+#include <atomic>
 #include <cstdint>
-#include <iostream>
 #include <functional>
+#include <iostream>
+#include <string>
 
 #include "pipe.h"
 
 std::string toString(uint32_t i)
 {
-	return std::to_string(i) + ", it's works\n";
+	return std::to_string(i) + ", it's works";
 }
 
 uint32_t addThree(uint32_t i)
@@ -35,12 +37,45 @@ uint32_t one()
 	return 1;
 }
 
-/* MAIN */
 int main()
 {
-	auto f1 = pipe(mul, addThree, multByFour, toString);
-	auto f2 = pipe(addThree, multByFour, addTwo);
-	std::cout << f1(5, 7) << std::endl  << f2(1) << std::endl;
+	auto mulLambda = [](int i, int j) { return i * j; };
+
+	auto f1 = pipe(
+						mulLambda,
+						addThree
+					);
+
+	auto f2 = pipe(
+						mul,
+						addThree,
+						multByFour,
+						toString
+					);
+
+	auto f3 = pipe(
+						[](uint32_t i) {
+							static std::atomic<uint32_t> counter = { 0 };
+							std::cout << "COUNTER = " << ++counter << " value = " << i << std::endl;
+							return i;
+						},
+						multByFour,
+						toString,
+						[](std::string in) {
+							std::transform(in.begin(), in.end(), in.begin(), ::toupper);
+							return in;
+						}
+					);
+
+	std::cout
+		<< f3(5)    << std::endl // 20   +STR
+		<< f1(5, 7) << std::endl // 38
+		<< f2(1, 5) << std::endl // 32   +str
+		<< f3(7)    << std::endl // 28   +STR
+		<< f3(15)   << std::endl // 60   +STR
+		<< f3(523)  << std::endl // 2092 +STR
+		<< f3(45)   << std::endl // 180  +STR
+		;
 
 	return 0;
 }
