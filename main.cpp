@@ -55,40 +55,40 @@ int main()
 
 
 	auto f1 = pipe(
-						mulLambda,
-						addThreeFunctor
-					);
+		mulLambda,
+		addThreeFunctor
+	);
 
 	auto f2 = pipe(
-						mul,
-						addThree,
-						multByFour,
-						toString
-					);
+		mul,
+		addThree,
+		multByFour,
+		toString
+	);
 
 	auto f3 = pipe(
-						mulFunctor,
-						addThree
-					);
+		mulFunctor,
+		addThree
+	);
 
 	auto f4 = pipe(
-						[](uint32_t i) {
-							static std::atomic<uint32_t> counter = { 0 };
-							std::cout << "COUNTER = " << ++counter << " value = " << i << std::endl;
-							return i;
-						},
-						multByFour,
-						toString,
-						[](std::string in) {
-							std::transform(in.begin(), in.end(), in.begin(), ::toupper);
-							return in;
-						}
-					);
+		[](uint32_t i) {
+			static std::atomic<uint32_t> counter = { 0 };
+			std::cout << "COUNTER = " << ++counter << " value = " << i << std::endl;
+			return i;
+		},
+		multByFour,
+		toString,
+		[](std::string in) {
+			std::transform(in.begin(), in.end(), in.begin(), ::toupper);
+			return in;
+		}
+	);
 
 	auto f5 = pipe(
-						mul,
-						std::bind(mul, std::placeholders::_1, 2)
-					);
+		mul,
+		std::bind(mul, std::placeholders::_1, 2)
+	);
 
 	std::cout
 		<< f1(5, 7) << std::endl // 38
