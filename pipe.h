@@ -17,9 +17,8 @@ template<typename T>
 struct function_trait;
 
 template <typename RESULT, typename ... ARGS>
-struct function_trait<RESULT(ARGS...)>
+struct function_trait_impl
 {
-public:
 	using result_type = RESULT;
 	using args_tuple_type = std::tuple<ARGS...>;
 
@@ -34,37 +33,27 @@ public:
 	template <typename FUNC, typename ... OTHER>
 	static decltype(auto) wrap(FUNC func, OTHER... other)
 	{
-		return [func, other...](ARGS... args)
+		return [func, other...](ARGS... args) mutable
 		{
 			return wrap_impl(func(args...), other...);
 		};
 	}
 };
+
+template <typename RESULT, typename ... ARGS>
+struct function_trait<RESULT(ARGS...)> :
+	public function_trait_impl<RESULT, ARGS...>
+{ };
 
 template <typename RESULT, typename TYPE, typename ... ARGS>
-struct function_trait<RESULT(TYPE::*)(ARGS...) const>
-{
-public:
-	using result_type = RESULT;
-	using args_tuple_type = std::tuple<ARGS...>;
+struct function_trait<RESULT(TYPE::*)(ARGS...)> :
+	public function_trait_impl<RESULT, ARGS...>
+{ };
 
-	static const size_t nargs = sizeof...(ARGS);
-
-	template <size_t i>
-	struct arg
-	{
-		using type = typename std::tuple_element<i, std::tuple<ARGS...>>::type;
-	};
-
-	template <typename FUNC, typename ... OTHER>
-	static decltype(auto) wrap(FUNC func, OTHER... other)
-	{
-		return [func, other...](ARGS... args)
-		{
-			return wrap_impl(func(args...), other...);
-		};
-	}
-};
+template <typename RESULT, typename TYPE, typename ... ARGS>
+struct function_trait<RESULT(TYPE::*)(ARGS...) const> :
+	public function_trait_impl<RESULT, ARGS...>
+{ };
 
 template <
 	typename FIRST,
