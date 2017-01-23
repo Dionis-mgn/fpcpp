@@ -23,7 +23,7 @@ std::vector<std::string> nativeSplit(const std::string source)
 
 int main()
 {
-	std::string testStr = "test, ,  aa,,,   ,, WHATH?";
+	const std::string testStr = "test, ,  aa,,,   ,, WHATH?";
 	using keywordList = std::vector<std::string>;
 
 	auto debugPrint = [](std::vector<std::string> v)
@@ -35,7 +35,7 @@ int main()
 		return v;
 	};
 
-	auto splitByComma = [](std::string s){ return split(',', s); };
+	auto splitByComma = [](const std::string &s){ return split(',', s); };
 
 	auto splitKeywords1 = pipe(
 		splitByComma

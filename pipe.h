@@ -2,15 +2,15 @@
 #include <type_traits>
 
 template <typename FUNC, typename ARG>
-decltype(auto) wrap_impl(ARG arg, FUNC func)
+decltype(auto) wrap_impl(ARG &&arg, FUNC func)
 {
-	return func(arg);
+	return func(std::forward<ARG>(arg));
 }
 
 template <typename FUNC, typename ARG, typename ... OTHER>
-decltype(auto) wrap_impl(ARG arg, FUNC func, OTHER ... other)
+decltype(auto) wrap_impl(ARG &&arg, FUNC func, OTHER ... other)
 {
-	return wrap_impl(func(arg), other...);
+	return wrap_impl(func(std::forward<ARG>(arg)), other...);
 }
 
 template<typename T>
@@ -33,9 +33,9 @@ struct function_trait_impl
 	template <typename FUNC, typename ... OTHER>
 	static decltype(auto) wrap(FUNC func, OTHER... other)
 	{
-		return [func, other...](ARGS... args) mutable
+		return [func, other...](auto&&... args) mutable
 		{
-			return wrap_impl(func(args...), other...);
+			return wrap_impl(func(std::forward<decltype(args)>(args)...), other...);
 		};
 	}
 };

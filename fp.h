@@ -55,17 +55,16 @@ decltype(auto) filter(F f)
 template <typename F>
 decltype(auto) nnot(F f)
 {
-	return [f](auto arg)
+	return [f](auto &&arg)
 	{
-		return !f(arg);
+		return !f(std::forward<decltype(arg)>(arg));
 	};
 }
 
 template <typename T, typename F>
 decltype(auto) reject(F f, const T &t)
 {
-	auto functor = nnot(f);
-	return filter(functor, t);
+	return filter(nnot(f), t);
 }
 
 template <typename F>
