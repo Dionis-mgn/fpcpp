@@ -1,75 +1,8 @@
 #include <algorithm>
 #include <iterator>
 #include <sstream>
-#include <string>
-#include <vector>
 #include <type_traits>
-
-std::vector<std::string> split(std::string::value_type separator, const std::string &source)
-{
-	std::vector<std::string> result;
-
-	// creepy, but pretty effective implementation. No FP at all.
-	auto start = source.data();
-	auto end = start + source.size();
-	auto curr = start;
-
-	while (curr < end)
-	{
-		if (*curr != separator)
-		{
-			curr++;
-			continue;
-		}
-		result.emplace_back(start, curr - start);
-		start = ++curr;
-	}
-	result.emplace_back(start, curr - start);
-
-	return result;
-}
-
-// trim from start
-static inline std::string ltrim(const std::string &s) {
-	auto i = s.begin();
-	while (i != s.end() && std::isspace(*i)) i++;
-
-	return std::string (i, s.end());
-}
-
-// trim from end // TODO: Fix bug
-static inline std::string rtrim(const std::string &s) {
-	auto i = s.end();
-
-	if (i == s.begin())
-		return "";
-
-	do
-	{
-		i--;
-	}
-	while (i != s.begin() && std::isspace(*i));
-
-	return std::string (s.begin(), i);
-}
-
-// trim from both ends
-static inline std::string trim(const std::string &s) {
-	auto is = s.begin();
-	while (is != s.end() && std::isspace(*is)) is++;
-
-	if (is == s.end())
-		return "";
-
-	auto ie = s.end();
-	do
-	{
-		ie--;
-	}
-	while (std::isspace(*ie));
-
-	return std::string (is, ie + 1);
-}
+#include <vector>
 
 template <typename T, typename F>
 decltype(auto) map(F f, const T &t)
@@ -84,7 +17,7 @@ decltype(auto) map(F f, const T &t)
 }
 
 template <typename F>
-decltype(auto) mapper(F f)
+decltype(auto) map(F f)
 {
 	return [f](const auto &t)
 	{
@@ -111,7 +44,7 @@ decltype(auto) filter(F f, const T &t)
 }
 
 template <typename F>
-decltype(auto) filterer(F f)
+decltype(auto) filter(F f)
 {
 	return [f](const auto &t)
 	{
@@ -136,7 +69,7 @@ decltype(auto) reject(F f, const T &t)
 }
 
 template <typename F>
-decltype(auto) rejecter(F f)
+decltype(auto) reject(F f)
 {
 	return [f](const auto &t)
 	{
@@ -144,7 +77,31 @@ decltype(auto) rejecter(F f)
 	};
 }
 
-bool is_empty(const std::string &s)
+template <typename F, typename ACC, typename CONTAINER>
+ACC reduce(F f, ACC acc, const CONTAINER &container)
 {
-	return s.empty();
+	for (auto &i : container)
+		f(i, acc);
+
+	return acc;
 }
+
+template <typename F, typename ACC>
+decltype(auto) reduce(F f, ACC acc)
+{
+	return [f, acc](const auto &container)
+	{
+		return reduce(f, acc, container);
+	};
+}
+
+/*
+template<typename F>
+decltype(auto) into(auto container, F func, auto input)
+{
+	for (auto &i : input)
+	{
+
+	}
+}
+*/
