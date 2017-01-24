@@ -25,6 +25,20 @@ std::vector<std::string> split(std::string::value_type separator, const std::str
 	return result;
 }
 
+template <std::string::value_type SEPARATOR>
+std::vector<std::string> split(const std::string &source)
+{
+	return split(SEPARATOR, source);
+}
+
+decltype(auto) split(std::string::value_type separator)
+{
+	return [separator](const std::string &source)
+	{
+		return split(separator, source);
+	};
+}
+
 // trim from start
 static inline std::string ltrim(const std::string &s) {
 	auto i = s.begin();

@@ -6,16 +6,19 @@
 #include "pipe.h"
 #include "fp.h"
 #include "stringutils.h"
-std::vector<std::string> nativeSplit(const std::string source)
+
+using keywordList = std::vector<std::string>;
+
+keywordList nativeSplit(const std::string &source)
 {
-	std::vector<std::string> result;
+	keywordList result;
 
 	auto v = split(',', source);
 	for (auto &i : v)
 	{
 		std::string trimmed = trim(i);
-		if (!i.empty())
-			result.push_back(i);
+		if (!trimmed.empty())
+			result.push_back(trimmed);
 	}
 
 	return result;
@@ -24,9 +27,8 @@ std::vector<std::string> nativeSplit(const std::string source)
 int main()
 {
 	const std::string testStr = "test, ,  aa,,,   ,, WHATH?";
-	using keywordList = std::vector<std::string>;
 
-	auto debugPrint = [](std::vector<std::string> v)
+	auto debugPrint = [](keywordList v)
 	{
 		std::cout << "---VECTOR---" << std::endl;
 		for (auto &i : v)
@@ -43,21 +45,21 @@ int main()
 		,reject(is_empty)
 	);
 
-	auto valueFormatter = [](std::string value, keywordList &accumulator)
+	auto valueFormatter = [](const std::string &value, keywordList &accumulator)
 	{
-		value = trim(value);
-		if (!value.empty())
-			accumulator.push_back(value);
+		std::string trimmed = trim(value);
+		if (!trimmed.empty())
+			accumulator.push_back(trimmed);
 	};
 
 	keywordList acc;
 
 	auto splitKeywords2 = pipe(
-		splitByComma
+		split(',')
 		,reduce(valueFormatter, acc)
 	);
 
-#define FUNC splitKeywords2
+#define FUNC nativeSplit
 
 	for (uint32_t i = 0; i < 500; i++)
 		FUNC(testStr);
