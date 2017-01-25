@@ -20,6 +20,16 @@ bool T(ARGS ...)
 	return true;
 }
 
+//C++17 variant
+//inline auto identity = [](auto v) { return v; };
+decltype(auto) identity()
+{
+	return [](auto v)
+	{
+		return v;
+	};
+}
+
 template <typename T>
 T add(T x, T y)
 {

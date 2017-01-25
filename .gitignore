@@ -5,3 +5,7 @@
 callgrind.out.*
 
 rapidcheck/*
+googletest/*
+
+CMakeFiles/*
+CMakeCache.txt
