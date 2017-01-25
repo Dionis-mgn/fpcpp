@@ -33,24 +33,3 @@ template <typename RESULT, typename TYPE, typename ... ARGS>
 struct function_trait<RESULT(TYPE::*)(ARGS...) const> :
 	public function_trait_impl<RESULT, ARGS...>
 { };
-
-template <typename FUNC, typename ARG>
-decltype(auto) pipe_impl(ARG &&arg, FUNC func)
-{
-	return func(std::forward<ARG>(arg));
-}
-
-template <typename FUNC, typename ARG, typename ... OTHER>
-decltype(auto) pipe_impl(ARG &&arg, FUNC func, OTHER ... other)
-{
-	return pipe_impl(func(std::forward<ARG>(arg)), other...);
-}
-
-template <typename FIRST, typename ... OTHER>
-decltype(auto) pipe(FIRST first, OTHER ... other)
-{
-	return [first, other...](auto&& ... args)
-	{
-		return pipe_impl(first(std::forward<decltype(args)>(args)...), other...);
-	};
-}

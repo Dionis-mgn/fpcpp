@@ -125,6 +125,28 @@ decltype(auto) reduce(F f, ACC acc)
 	};
 }
 
+template <typename FUNC, typename ARG>
+decltype(auto) pipe_impl(ARG &&arg, FUNC func)
+{
+	return func(std::forward<ARG>(arg));
+}
+
+template <typename FUNC, typename ARG, typename ... OTHER>
+decltype(auto) pipe_impl(ARG &&arg, FUNC func, OTHER ... other)
+{
+	return pipe_impl(func(std::forward<ARG>(arg)), other...);
+}
+
+template <typename FIRST, typename ... OTHER>
+decltype(auto) pipe(FIRST first, OTHER ... other)
+{
+	return [first, other...](auto&& ... args)
+	{
+		return pipe_impl(first(std::forward<decltype(args)>(args)...), other...);
+	};
+}
+
+
 /*
 template<typename F>
 decltype(auto) into(auto container, F func, auto input)
