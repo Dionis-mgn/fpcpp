@@ -4,6 +4,37 @@
 #include <type_traits>
 #include <vector>
 
+/*******************************************************************************
+*                                                                        COMMON
+*******************************************************************************/
+
+template <typename ... ARGS>
+bool F(ARGS ...)
+{
+	return false;
+}
+
+template <typename ... ARGS>
+bool T(ARGS ...)
+{
+	return true;
+}
+
+template <typename T>
+T add(T x, T y)
+{
+	return x + y;
+}
+
+template <typename T>
+decltype(auto) add(T x)
+{
+	return [x](T y)
+	{
+		return x + y;
+	};
+}
+
 template <typename T, typename F>
 decltype(auto) map(F f, const T &t)
 {
@@ -25,13 +56,13 @@ decltype(auto) map(F f)
 	};
 }
 
-template <typename T, typename F>
-decltype(auto) filter(F f, const T &t)
+template <template<typename...> typename T, typename F, typename ...T_ARGS>
+decltype(auto) filter(F f, const T<T_ARGS...> &t)
 {
 	using f_result_type = decltype(f(*t.begin()));
-	using value_type = typename T::value_type;
+	using value_type = typename std::decay<decltype(t)>::type::value_type;
 	static_assert(std::is_same<f_result_type, bool>::value, "Functional object should return a bool");
-	using result_t = typename std::vector<value_type>;
+	using result_t = T<value_type>;
 	result_t result;
 
 	for (auto &i : t)
