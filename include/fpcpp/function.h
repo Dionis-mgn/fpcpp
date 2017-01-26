@@ -56,7 +56,7 @@ namespace impl
 template <typename FIRST, typename ... OTHER>
 inline decltype(auto) pipe(FIRST first, OTHER ... other)
 {
-	return [first, other...](auto&& ... args)
+	return [first, other...](auto&& ... args) mutable
 	{
 		return impl::pipe(first(std::forward<decltype(args)>(args)...), other...);
 	};

@@ -12,3 +12,4 @@ macro(add_example name)
 endmacro()
 
 add_example(splitkeywords)
+add_example(pipe)
