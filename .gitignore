@@ -1,6 +1,7 @@
 .kdev4/*
 *.kdev4
 .vscode/*
+.directory
 
 callgrind.out.*
 
