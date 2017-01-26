@@ -1,7 +1,0 @@
-{
-    "version": "0.1.0",
-    "command": "g++-6",
-    "isShellCommand": true,
-    "args": ["-ggdb", "--std=c++14", "-O2", "-Wall", "-pedantic", "-o main", "./splitkeywords.cpp"],
-    "showOutput": "always"
-}
