@@ -2,7 +2,7 @@ namespace fpcpp
 {
 
 template <template<typename...> typename T, typename F, typename ...T_ARGS>
-decltype(auto) map(F f, const T<T_ARGS...> &t)
+inline decltype(auto) map(F f, const T<T_ARGS...> &t)
 {
 	using f_result_type = decltype(f(*t.begin()));
 	using result_t = T<f_result_type>;
@@ -15,7 +15,7 @@ decltype(auto) map(F f, const T<T_ARGS...> &t)
 }
 
 template <typename F>
-decltype(auto) map(F f)
+inline decltype(auto) map(F f)
 {
 	return [f](const auto &t)
 	{
@@ -24,7 +24,7 @@ decltype(auto) map(F f)
 }
 
 template <template<typename...> typename T, typename F, typename ...T_ARGS>
-decltype(auto) filter(F f, const T<T_ARGS...> &t)
+inline decltype(auto) filter(F f, const T<T_ARGS...> &t)
 {
 	using f_result_type = decltype(f(*t.begin()));
 	using value_type = typename std::decay<decltype(t)>::type::value_type;
@@ -42,7 +42,7 @@ decltype(auto) filter(F f, const T<T_ARGS...> &t)
 }
 
 template <typename F>
-decltype(auto) filter(F f)
+inline decltype(auto) filter(F f)
 {
 	return [f](const auto &t)
 	{
@@ -51,13 +51,13 @@ decltype(auto) filter(F f)
 }
 
 template <typename T, typename F>
-decltype(auto) reject(F f, const T &t)
+inline decltype(auto) reject(F f, const T &t)
 {
 	return filter(Not(f), t);
 }
 
 template <typename F>
-decltype(auto) reject(F f)
+inline decltype(auto) reject(F f)
 {
 	return [f](const auto &t)
 	{
@@ -66,7 +66,7 @@ decltype(auto) reject(F f)
 }
 
 template <typename F, typename ACC, typename CONTAINER>
-ACC reduce(F f, ACC acc, const CONTAINER &container)
+inline ACC reduce(F f, ACC acc, const CONTAINER &container)
 {
 	for (auto &i : container)
 		f(i, acc);
@@ -75,7 +75,7 @@ ACC reduce(F f, ACC acc, const CONTAINER &container)
 }
 
 template <typename F, typename ACC>
-decltype(auto) reduce(F f, ACC acc)
+inline decltype(auto) reduce(F f, ACC acc)
 {
 	return [f, acc](const auto &container)
 	{

@@ -3,6 +3,8 @@ project(fpcpp_tests)
 set(SOURCES
 	main.cpp
 	map.cpp
+	F.cpp
+	T.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})

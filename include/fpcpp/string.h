@@ -4,7 +4,7 @@
 namespace fpcpp
 {
 
-std::vector<std::string> split(std::string::value_type separator, const std::string &source)
+inline std::vector<std::string> split(std::string::value_type separator, const std::string &source)
 {
 	std::vector<std::string> result;
 
@@ -29,12 +29,12 @@ std::vector<std::string> split(std::string::value_type separator, const std::str
 }
 
 template <std::string::value_type SEPARATOR>
-std::vector<std::string> split(const std::string &source)
+inline std::vector<std::string> split(const std::string &source)
 {
 	return split(SEPARATOR, source);
 }
 
-decltype(auto) split(std::string::value_type separator)
+inline decltype(auto) split(std::string::value_type separator)
 {
 	return [separator](const std::string &source)
 	{
@@ -43,7 +43,7 @@ decltype(auto) split(std::string::value_type separator)
 }
 
 // trim from start
-static inline std::string ltrim(const std::string &s) {
+inline std::string ltrim(const std::string &s) {
 	auto i = s.begin();
 	while (i != s.end() && std::isspace(*i)) i++;
 
@@ -51,7 +51,7 @@ static inline std::string ltrim(const std::string &s) {
 }
 
 // trim from end // TODO: Fix bug
-static inline std::string rtrim(const std::string &s) {
+inline std::string rtrim(const std::string &s) {
 	auto i = s.end();
 
 	if (i == s.begin())
@@ -67,7 +67,7 @@ static inline std::string rtrim(const std::string &s) {
 }
 
 // trim from both ends
-static inline std::string trim(const std::string &s) {
+inline std::string trim(const std::string &s) {
 	auto is = s.begin();
 	while (is != s.end() && std::isspace(*is)) is++;
 
