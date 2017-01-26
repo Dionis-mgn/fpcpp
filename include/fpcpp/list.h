@@ -53,7 +53,7 @@ decltype(auto) filter(F f)
 template <typename T, typename F>
 decltype(auto) reject(F f, const T &t)
 {
-	return filter(nnot(f), t);
+	return filter(Not(f), t);
 }
 
 template <typename F>

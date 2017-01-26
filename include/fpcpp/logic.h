@@ -2,7 +2,7 @@ namespace fpcpp
 {
 
 template <typename F>
-decltype(auto) _not(F f)
+decltype(auto) Not(F f)
 {
 	return [f](auto &&arg)
 	{
