@@ -38,24 +38,27 @@ inline decltype(auto) identity()
 	};
 }
 
-template <typename FUNC, typename ARG>
-inline decltype(auto) pipe_impl(ARG &&arg, FUNC func)
+namespace impl
 {
-	return func(std::forward<ARG>(arg));
-}
+	template <typename FUNC, typename ARG>
+	inline decltype(auto) pipe(ARG &&arg, FUNC func)
+	{
+		return func(std::forward<ARG>(arg));
+	}
 
-template <typename FUNC, typename ARG, typename ... OTHER>
-inline decltype(auto) pipe_impl(ARG &&arg, FUNC func, OTHER ... other)
-{
-	return pipe_impl(func(std::forward<ARG>(arg)), other...);
-}
+	template <typename FUNC, typename ARG, typename ... OTHER>
+	inline decltype(auto) pipe(ARG &&arg, FUNC func, OTHER ... other)
+	{
+		return pipe(func(std::forward<ARG>(arg)), other...);
+	}
+} // namespace impl
 
 template <typename FIRST, typename ... OTHER>
 inline decltype(auto) pipe(FIRST first, OTHER ... other)
 {
 	return [first, other...](auto&& ... args)
 	{
-		return pipe_impl(first(std::forward<decltype(args)>(args)...), other...);
+		return impl::pipe(first(std::forward<decltype(args)>(args)...), other...);
 	};
 }
 
