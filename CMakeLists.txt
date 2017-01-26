@@ -8,15 +8,12 @@ add_subdirectory("googletest")
 add_subdirectory("rapidcheck")
 
 include_directories(
-	.
+	./include
 	./rapidcheck/include
 	./rapidcheck/extras/gtest/include
 )
 
-set(SOURCES
-	tests/main.cpp
-	tests/map.cpp
-)
+set (BIN_DIR "${PROJECT_SOURCE_DIR}/bin")
 
-add_executable(fpcpp_tests ${SOURCES})
-target_link_libraries(fpcpp_tests gtest rapidcheck)
+add_subdirectory(tests)
+add_subdirectory(examples)

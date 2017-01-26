@@ -1,8 +1,8 @@
 #include <iostream>
-#include <functional>
+#include <vector>
 
-#include "fp.h"
-#include "stringutils.h"
+#include "fpcpp.h"
+using namespace fpcpp;
 
 using keywordList = std::vector<std::string>;
 
@@ -30,10 +30,11 @@ int main()
 	auto splitKeywords = pipe(
 		split(',')
 		,reduce(valueFormatter, acc)
-		//,debugPrint
+		,debugPrint
 	);
 
-	const std::string testStr = "test,aa,WHATH?,aa,WHATH?,aa, WHATH?,aa,  ,, WHATH?, ,  aa, WHATH?, ,  aa,  ,, WHATH?";
+	const std::string testStr = "  all ,this,, , keywords, should,   ,,be printed"
+	                            ", separately   , without trailing ws,,,Yep!    ";
 	splitKeywords(testStr);
 
 	return 0;

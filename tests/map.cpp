@@ -3,7 +3,8 @@
 
 #include <string>
 
-#include "fp.h"
+#include "fpcpp.h"
+using namespace fpcpp;
 
 RC_GTEST_PROP(map,
 	identityMapEqualsToOriginal,

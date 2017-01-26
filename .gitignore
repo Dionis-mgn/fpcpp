@@ -7,5 +7,9 @@ callgrind.out.*
 rapidcheck/*
 googletest/*
 
-CMakeFiles/*
+**/CMakeFiles/*
 CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+bin/*

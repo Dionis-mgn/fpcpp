@@ -1,6 +1,9 @@
 #include <string>
 #include <vector>
 
+namespace fpcpp
+{
+
 std::vector<std::string> split(std::string::value_type separator, const std::string &source)
 {
 	std::vector<std::string> result;
@@ -81,7 +84,4 @@ static inline std::string trim(const std::string &s) {
 	return std::string (is, ie + 1);
 }
 
-bool is_empty(const std::string &s)
-{
-	return s.empty();
-}
+} // namespace fpcpp
