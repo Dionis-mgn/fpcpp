@@ -13,13 +13,28 @@ inline bool T(ARGS ...)
 	return true;
 }
 
+namespace impl
+{
+	template <typename T>
+	inline T identity(T t)
+	{
+		return t;
+	}
+
+	template <typename T, typename ... OTHER>
+	inline T identity(T t, OTHER ...)
+	{
+		return t;
+	}
+}
+
 //C++17 variant
 //inline auto identity = [](auto v) { return v; };
 inline decltype(auto) identity()
 {
-	return [](auto v)
+	return [](auto ... v)
 	{
-		return v;
+		return impl::identity(v...);
 	};
 }
 
