@@ -1,8 +1,8 @@
 namespace fpcpp
 {
 
-template <typename T>
-inline T add(T x, T y)
+template <typename T1, typename T2>
+inline decltype(auto) add(T1 x, T2 y)
 {
 	return x + y;
 }
@@ -10,9 +10,9 @@ inline T add(T x, T y)
 template <typename T>
 inline decltype(auto) add(T x)
 {
-	return [x](T y)
+	return [x](auto y)
 	{
-		return x + y;
+		return y + x;
 	};
 }
 

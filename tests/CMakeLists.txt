@@ -5,6 +5,7 @@ set(SOURCES
 	map.cpp
 	F.cpp
 	T.cpp
+	add.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})
