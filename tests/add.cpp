@@ -7,19 +7,19 @@ using namespace fpcpp;
 /* *add* commutative ONLY in case if (operator +) for used type is commutative */
 RC_GTEST_PROP(add, commutative, (uint32_t x, uint32_t y))
 {
-	EXPECT_EQ(add(x, y), add(y, x));
+	RC_ASSERT(add(x, y) == add(y, x));
 }
 
 /* *add* associative ONLY in case if (operator +) for used type is commutative */
 RC_GTEST_PROP(add, associative, (uint32_t x, uint32_t y, uint32_t z))
 {
-	EXPECT_EQ(add(x, add(y, z)), add(add(x, y), z));
+	RC_ASSERT(add(x, add(y, z)) == add(add(x, y), z));
 }
 
 RC_GTEST_PROP(add, identity, (uint32_t x))
 {
-	EXPECT_EQ(add(x, 0), x);
-	EXPECT_EQ(add(0, x), x);
+	RC_ASSERT(add(x, 0) == x);
+	RC_ASSERT(add(0, x) == x);
 }
 
 TEST(add, two_numbers)

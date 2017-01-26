@@ -6,6 +6,7 @@ set(SOURCES
 	F.cpp
 	T.cpp
 	add.cpp
+	filter.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})

@@ -27,8 +27,9 @@ template <template<typename...> typename T, typename F, typename ...T_ARGS>
 inline decltype(auto) filter(F f, const T<T_ARGS...> &t)
 {
 	using f_result_type = decltype(f(*t.begin()));
-	using value_type = typename std::decay<decltype(t)>::type::value_type;
 	static_assert(std::is_same<f_result_type, bool>::value, "Functional object should return a bool");
+
+	using value_type = typename std::decay<decltype(t)>::type::value_type;
 	using result_t = T<value_type>;
 	result_t result;
 
