@@ -10,6 +10,14 @@ inline decltype(auto) Not(F f)
 	};
 }
 
+inline decltype(auto) Not()
+{
+	return [](auto&&... args)
+	{
+		return Not(std::forward<decltype(args)>(args)...);
+	};
+}
+
 //C++17 variant
 //inline auto is_empty = [](const auto &obj) { return obj.empty(); };
 inline decltype(auto) is_empty()

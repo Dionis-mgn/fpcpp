@@ -16,6 +16,14 @@ inline decltype(auto) add(T x)
 	};
 }
 
+inline decltype(auto) add()
+{
+	return [](auto&&... x)
+	{
+		return add(std::forward<decltype(x)>(x)...);
+	};
+}
+
 template <typename T1, typename T2>
 inline decltype(auto) multiply(T1 x, T2 y)
 {
@@ -28,6 +36,14 @@ inline decltype(auto) multiply(T x)
 	return [x](auto y)
 	{
 		return y * x;
+	};
+}
+
+inline decltype(auto) multiply()
+{
+	return [](auto&&... x)
+	{
+		return multiply(std::forward<decltype(x)>(x)...);
 	};
 }
 

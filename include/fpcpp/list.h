@@ -23,6 +23,14 @@ inline decltype(auto) map(F f)
 	};
 }
 
+inline decltype(auto) map()
+{
+	return [](auto... f)
+	{
+		return map(std::forward<decltype(f)>(f)...);
+	};
+}
+
 template <template<typename...> typename T, typename F, typename ...T_ARGS>
 inline decltype(auto) filter(F f, const T<T_ARGS...> &t)
 {
@@ -51,6 +59,14 @@ inline decltype(auto) filter(F f)
 	};
 }
 
+inline decltype(auto) filter()
+{
+	return [](auto&&... t)
+	{
+		return filter(std::forward<decltype(t)>(t)...);
+	};
+}
+
 template <typename T, typename F>
 inline decltype(auto) reject(F f, const T &t)
 {
@@ -63,6 +79,14 @@ inline decltype(auto) reject(F f)
 	return [f](const auto &t)
 	{
 		return reject(f, t);
+	};
+}
+
+inline decltype(auto) reject()
+{
+	return [](auto&&... t)
+	{
+		return reject(std::forward<decltype(t)>(t)...);
 	};
 }
 
@@ -81,6 +105,14 @@ inline decltype(auto) reduce(F f, ACC acc)
 	return [f, acc](const auto &container)
 	{
 		return reduce(f, acc, container);
+	};
+}
+
+inline decltype(auto) reduce()
+{
+	return [](auto&&... args)
+	{
+		return reduce(std::forward<decltype(args)>(args)...);
 	};
 }
 

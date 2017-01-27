@@ -42,6 +42,14 @@ inline decltype(auto) split(std::string::value_type separator)
 	};
 }
 
+inline decltype(auto) split()
+{
+	return [](auto&&... args)
+	{
+		return split(std::forward<decltype(args)>(args)...);
+	};
+}
+
 // trim from start
 inline std::string ltrim(const std::string &s) {
 	auto i = s.begin();
