@@ -9,6 +9,7 @@ set(SOURCES
 	filter.cpp
 	identity.cpp
 	is_empty.cpp
+	multiply.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})
