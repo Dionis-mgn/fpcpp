@@ -1,7 +1,9 @@
+#include "function_trait.h"
+
 namespace fpcpp
 {
 
-template <template<typename...> typename T, typename F, typename ...T_ARGS>
+template <template<typename...> class T, typename F, typename ...T_ARGS>
 inline decltype(auto) map(F f, const T<T_ARGS...> &t)
 {
 	using f_result_type = decltype(f(*t.begin()));
@@ -31,7 +33,7 @@ inline decltype(auto) map()
 	};
 }
 
-template <template<typename...> typename T, typename F, typename ...T_ARGS>
+template <template<typename...> class T, typename F, typename ...T_ARGS>
 inline decltype(auto) filter(F f, const T<T_ARGS...> &t)
 {
 	using f_result_type = decltype(f(*t.begin()));
@@ -90,11 +92,44 @@ inline decltype(auto) reject()
 	};
 }
 
+namespace impl
+{
+	template <typename F, typename ACC, typename CONTAINER>
+	inline void call_reducer(F &f, ACC &acc, const CONTAINER &container, std::false_type)
+	{
+		for (auto &i : container)
+			f(i, acc);
+	}
+
+	template <typename F, typename ACC, typename CONTAINER>
+	inline void call_reducer(F &f, ACC &acc, const CONTAINER &container, std::true_type)
+	{
+		for (auto &i : container)
+			acc = f(i, acc);
+	}
+
+	template< class, class = std::void_t<> >
+	struct has_type_member : std::false_type { };
+
+	template< class T >
+	struct has_type_member<T, std::void_t<typename T::type>> : std::true_type { };
+}
+
 template <typename F, typename ACC, typename CONTAINER>
 inline ACC reduce(F f, ACC acc, const CONTAINER &container)
 {
-	for (auto &i : container)
-		f(i, acc);
+	using reducer_return_type = typename std::result_of<
+			F(decltype(*container.begin()),
+			typename std::add_lvalue_reference<ACC>::type)
+		>::type;
+	using assig_call_avaliable = typename std::is_convertible<reducer_return_type, ACC>::type;
+	using reducer_captures_acc_nonref = typename impl::has_type_member<
+			typename std::result_of<F(decltype(*container.begin()), ACC)>
+		>::type;
+	static_assert(assig_call_avaliable()() || !reducer_captures_acc_nonref()(),
+	"Reducer should return new value of accumulator OR capture it as non-const reference argument");
+
+	impl::call_reducer(f, acc, container, assig_call_avaliable ());
 
 	return acc;
 }
@@ -105,6 +140,15 @@ inline decltype(auto) reduce(F f, ACC acc)
 	return [f, acc](const auto &container)
 	{
 		return reduce(f, acc, container);
+	};
+}
+
+template <typename F>
+inline decltype(auto) reduce(F f)
+{
+	return [f](auto&&... args)
+	{
+		return reduce(f, std::forward<decltype(args)>(args)...);
 	};
 }
 

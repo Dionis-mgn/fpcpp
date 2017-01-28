@@ -1,6 +1,9 @@
 #include <tuple>
 #include <type_traits>
 
+namespace fpcpp
+{
+
 template<typename T>
 struct function_trait;
 
@@ -33,3 +36,5 @@ template <typename RESULT, typename TYPE, typename ... ARGS>
 struct function_trait<RESULT(TYPE::*)(ARGS...) const> :
 	public function_trait_impl<RESULT, ARGS...>
 { };
+
+} // namespace fpcpp

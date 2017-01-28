@@ -11,6 +11,7 @@ set(SOURCES
 	is_empty.cpp
 	multiply.cpp
 	pipe.cpp
+	reduce.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})
