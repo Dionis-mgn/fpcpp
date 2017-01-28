@@ -42,9 +42,8 @@ TEST(pipe, std_bind)
 	auto functor1 = std::make_unique<UselessFunctor>(2);
 	auto functor2 = std::make_unique<UselessFunctor>(10);
 
-
-
 	auto fn = pipe(std::bind(&UselessFunctor::mult, _1, _2), std::bind(&UselessFunctor::mult, functor2.get(), _1));
+
 	EXPECT_EQ(fn(functor1, 5), 100); // 2 * 5 * 10
 	EXPECT_EQ(fn(functor2, 9), 900); // 9 * 10 * 10
 }
