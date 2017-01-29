@@ -23,7 +23,10 @@ inline std::vector<std::string> split(std::string::value_type separator, const s
 		result.emplace_back(start, curr - start);
 		start = ++curr;
 	}
-	result.emplace_back(start, curr - start);
+	if (curr > start)
+		result.emplace_back(start, curr - start);
+	else
+		result.emplace_back("");
 
 	return result;
 }

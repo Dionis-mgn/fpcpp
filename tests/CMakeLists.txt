@@ -12,6 +12,7 @@ set(SOURCES
 	pipe.cpp
 	reduce.cpp
 	reject.cpp
+	split.cpp
 	T.cpp
 )
 
