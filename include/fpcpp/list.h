@@ -72,7 +72,7 @@ inline decltype(auto) filter()
 template <typename T, typename F>
 inline decltype(auto) reject(F f, const T &t)
 {
-	return filter(Not(f), t);
+	return filter(complement(f), t);
 }
 
 template <typename F>

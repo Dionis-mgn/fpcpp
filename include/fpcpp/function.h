@@ -1,16 +1,20 @@
 namespace fpcpp
 {
 
-template <typename ... ARGS>
-inline bool F(ARGS ...)
+inline decltype(auto) F()
 {
-	return false;
+	return [](auto...)
+	{
+		return false;
+	};
 }
 
-template <typename ... ARGS>
-inline bool T(ARGS ...)
+inline decltype(auto) T()
 {
-	return true;
+	return [](auto...)
+	{
+		return true;
+	};
 }
 
 namespace impl

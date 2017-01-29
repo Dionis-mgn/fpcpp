@@ -2,19 +2,19 @@ namespace fpcpp
 {
 
 template <typename F>
-inline decltype(auto) Not(F f)
+inline decltype(auto) complement(F f)
 {
-	return [f](auto &&arg)
+	return [f](auto&&... arg)
 	{
-		return !f(std::forward<decltype(arg)>(arg));
+		return !f(std::forward<decltype(arg)>(arg)...);
 	};
 }
 
-inline decltype(auto) Not()
+inline decltype(auto) complement()
 {
 	return [](auto&&... args)
 	{
-		return Not(std::forward<decltype(args)>(args)...);
+		return complement(std::forward<decltype(args)>(args)...);
 	};
 }
 
