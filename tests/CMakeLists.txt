@@ -1,17 +1,18 @@
 project(fpcpp_tests)
 
 set(SOURCES
-	main.cpp
-	map.cpp
-	F.cpp
-	T.cpp
 	add.cpp
+	F.cpp
 	filter.cpp
 	identity.cpp
 	is_empty.cpp
+	main.cpp
+	map.cpp
 	multiply.cpp
 	pipe.cpp
 	reduce.cpp
+	reject.cpp
+	T.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})

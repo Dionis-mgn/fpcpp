@@ -1,5 +1,5 @@
 #include "fpcpp/function.h"
 #include "fpcpp/math.h"
-#include "fpcpp/list.h"
 #include "fpcpp/logic.h"
+#include "fpcpp/list.h"
 #include "fpcpp/string.h"

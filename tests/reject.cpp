@@ -8,69 +8,68 @@
 #include "fpcpp.h"
 using namespace fpcpp;
 
-namespace _filter // preventing multiple definitions of odd
+namespace _reject // preventing multiple definitions of odd
 {
 
 auto odd = [](uint32_t x) -> bool { return x % 2; };
 
-RC_GTEST_PROP(filter, filtered_container_not_bigger_than_original,
+RC_GTEST_PROP(reject, filtered_container_not_bigger_than_original,
 	(const std::vector<uint32_t> &data))
 {
-	auto result = filter(odd, data);
+	auto result = reject(odd, data);
 
 	RC_CLASSIFY(result.size() == data.size());
 
 	RC_ASSERT(result.size() <= data.size());
 
-	static_assert(std::is_same<decltype(result), std::vector<uint32_t>>::value, "filter returns wrong container type");
+	static_assert(std::is_same<decltype(result), std::vector<uint32_t>>::value, "reject returns wrong container type");
 }
 
-RC_GTEST_PROP(filter, return_empty_if_no_satisfied_condition,
+RC_GTEST_PROP(reject, return_empty_if_no_satisfied_condition,
 	(const std::vector<std::string> &data))
 {
-	auto result = filter([](const std::string){ return false; }, data);
+	auto result = reject([](const std::string){ return true; }, data);
 
 	RC_ASSERT(result.size() == 0);
 }
 
-RC_GTEST_PROP(filter, return_original_container_if_all_elements_accepted,
+RC_GTEST_PROP(reject, return_original_container_if_no_rejected_elements,
 	(const std::vector<std::string> &data))
 {
-	auto result = filter([](const std::string){ return true; }, data);
+	auto result = reject([](const std::string){ return false; }, data);
 
 	RC_ASSERT(result == data);
 }
 
-
-TEST(filter, odd_filter)
+TEST(reject, odd_filter)
 {
 	using container_t = const std::vector<uint32_t>;
 	container_t input    { 1, 2, 3, 4, 5 };
-	container_t expected { 1, 3, 5 };
+	container_t expected { 2, 4 };
 
-	auto fn = filter(odd);
+	auto fn = reject(odd);
 	auto result = fn(input);
 
 	EXPECT_EQ(result, expected);
 }
 
-TEST(filter, std_list)
+TEST(reject, std_list)
 {
 	using container_t = const std::list<uint32_t>;
 	container_t input    { 1, 2, 3, 4, 5 };
-	container_t expected { 1, 3, 5 };
+	container_t expected { 2, 4 };
 
-	auto fn = filter(odd);
+	auto fn = reject(odd);
 	auto result = fn(input);
 
 	EXPECT_EQ(result, expected);
 }
 
-TEST(filter, empty)
+TEST(reject, empty)
 {
 	const std::list<uint32_t> input { };
 
-	auto fn = filter(odd);
+	auto fn = reject(odd);
 	auto result = fn(input);
 
 	EXPECT_EQ(result, input);
