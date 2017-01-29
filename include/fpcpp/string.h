@@ -53,16 +53,16 @@ inline decltype(auto) split()
 	};
 }
 
-// trim from start
-inline std::string ltrim(const std::string &s) {
+// trim from beginning
+inline std::string trimB(const std::string &s) {
 	auto i = s.begin();
 	while (i != s.end() && std::isspace(*i)) i++;
 
 	return std::string (i, s.end());
 }
 
-// trim from end // TODO: Fix bug
-inline std::string rtrim(const std::string &s) {
+// trim from end
+inline std::string trimE(const std::string &s) {
 	auto i = s.end();
 
 	if (i == s.begin())
@@ -74,7 +74,10 @@ inline std::string rtrim(const std::string &s) {
 	}
 	while (i != s.begin() && std::isspace(*i));
 
-	return std::string (s.begin(), i);
+	if (std::isspace(*i))
+		return "";
+
+	return std::string (s.begin(), i + 1);
 }
 
 // trim from both ends

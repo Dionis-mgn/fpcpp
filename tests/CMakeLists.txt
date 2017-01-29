@@ -14,6 +14,7 @@ set(SOURCES
 	reject.cpp
 	split.cpp
 	T.cpp
+	trim.cpp
 )
 
 add_executable(fpcpp_tests ${SOURCES})
