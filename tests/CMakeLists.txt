@@ -2,6 +2,7 @@ project(fpcpp_tests)
 
 set(SOURCES
 	add.cpp
+	always.cpp
 	complement.cpp
 	F.cpp
 	filter.cpp

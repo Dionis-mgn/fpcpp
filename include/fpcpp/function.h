@@ -17,6 +17,15 @@ inline decltype(auto) T()
 	};
 }
 
+template <typename T>
+inline decltype(auto) always(const T &value)
+{
+	return [value](auto&& ...)
+	{
+		return value;
+	};
+}
+
 namespace impl
 {
 	template <typename T>
