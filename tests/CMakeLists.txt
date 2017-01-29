@@ -10,6 +10,7 @@ set(SOURCES
 	main.cpp
 	map.cpp
 	multiply.cpp
+	not.cpp
 	pipe.cpp
 	reduce.cpp
 	reject.cpp

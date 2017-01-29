@@ -18,6 +18,14 @@ inline decltype(auto) complement()
 	};
 }
 
+inline decltype(auto) Not()
+{
+	return [](const auto &arg)
+	{
+		return !arg;
+	};
+}
+
 //C++17 variant
 //inline auto is_empty = [](const auto &obj) { return obj.empty(); };
 inline decltype(auto) is_empty()
