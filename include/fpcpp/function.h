@@ -75,4 +75,31 @@ inline decltype(auto) pipe(FIRST first, OTHER ... other)
 	};
 }
 
+template <typename F, typename T>
+inline T tap(F &&f, T &&t)
+{
+	using cT = typename std::add_const<T>::type;
+
+	f(static_cast<cT>(t));
+	return t;
+}
+
+template <typename F>
+inline decltype(auto) tap(F f)
+{
+	return [f](auto && t)
+	{
+		f(t);
+		return t;
+	};
+}
+
+inline decltype(auto) tap()
+{
+	return [](auto&&... args)
+	{
+		return tap(std::forward<decltype(args)>(args)...);
+	};
+}
+
 } // namespace fpcpp

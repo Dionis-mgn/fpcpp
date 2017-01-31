@@ -17,6 +17,7 @@ set(SOURCES
 	reject.cpp
 	split.cpp
 	T.cpp
+	tap.cpp
 	trim.cpp
 )
 
