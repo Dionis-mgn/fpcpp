@@ -108,11 +108,14 @@ namespace impl
 			acc = f(i, acc);
 	}
 
-	template< class, class = std::void_t<> >
+	template<typename... Ts> struct make_void { typedef void type;};
+	template<typename... Ts> using void_t = typename make_void<Ts...>::type;
+
+	template< class, class = void_t<> >
 	struct has_type_member : std::false_type { };
 
 	template< class T >
-	struct has_type_member<T, std::void_t<typename T::type>> : std::true_type { };
+	struct has_type_member<T, void_t<typename T::type>> : std::true_type { };
 }
 
 template <typename F, typename ACC, typename CONTAINER>

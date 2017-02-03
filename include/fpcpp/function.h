@@ -3,7 +3,7 @@ namespace fpcpp
 
 inline decltype(auto) F()
 {
-	return [](auto...)
+	return [](auto... v)
 	{
 		return false;
 	};
@@ -11,7 +11,7 @@ inline decltype(auto) F()
 
 inline decltype(auto) T()
 {
-	return [](auto...)
+	return [](auto... v)
 	{
 		return true;
 	};
@@ -20,7 +20,7 @@ inline decltype(auto) T()
 template <typename T>
 inline decltype(auto) always(const T &value)
 {
-	return [value](auto&& ...)
+	return [value](auto&& ... x)
 	{
 		return value;
 	};
