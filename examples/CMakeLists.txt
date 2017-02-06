@@ -13,3 +13,4 @@ endmacro()
 
 add_example(splitkeywords)
 add_example(pipe)
+add_example(curry)

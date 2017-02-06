@@ -7,6 +7,7 @@
 #include "fpcpp/logic.h"
 #include "fpcpp/list.h"
 #include "fpcpp/function.h"
+#include "fpcpp/curry.h"
 #include "fpcpp/string.h"
 
 #endif // Include Guard
