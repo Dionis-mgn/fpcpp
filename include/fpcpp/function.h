@@ -1,3 +1,8 @@
+#ifndef FPCPP_FUNCTION_H_
+#define FPCPP_FUNCTION_H_
+
+#include <utility>
+
 namespace fpcpp
 {
 
@@ -103,3 +108,5 @@ inline decltype(auto) tap()
 }
 
 } // namespace fpcpp
+
+#endif // Include Guard

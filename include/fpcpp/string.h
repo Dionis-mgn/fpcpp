@@ -1,3 +1,6 @@
+#ifndef FPCPP_STRING_H_
+#define FPCPP_STRING_H_
+
 #include <string>
 #include <vector>
 
@@ -99,3 +102,5 @@ inline std::string trim(const std::string &s) {
 }
 
 } // namespace fpcpp
+
+#endif // Include Guard

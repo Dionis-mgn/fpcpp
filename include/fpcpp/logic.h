@@ -1,3 +1,6 @@
+#ifndef FPCPP_LOGIC_H_
+#define FPCPP_LOGIC_H_
+
 namespace fpcpp
 {
 
@@ -37,3 +40,5 @@ inline decltype(auto) is_empty()
 }
 
 } // namespace fpcpp
+
+#endif // Include Guard

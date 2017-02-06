@@ -1,3 +1,6 @@
+#ifndef FPCPP_MATH_H_
+#define FPCPP_MATH_H_
+
 namespace fpcpp
 {
 
@@ -48,3 +51,5 @@ inline decltype(auto) multiply()
 }
 
 } // namespace fpcpp
+
+#endif // Include Guard

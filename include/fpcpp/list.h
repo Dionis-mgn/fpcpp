@@ -1,4 +1,7 @@
-#include "function_trait.h"
+#ifndef FPCPP_LIST_H_
+#define FPCPP_LIST_H_
+
+#include "common.h"
 
 namespace fpcpp
 {
@@ -107,15 +110,6 @@ namespace impl
 		for (auto &i : container)
 			acc = f(i, acc);
 	}
-
-	template<typename... Ts> struct make_void { typedef void type;};
-	template<typename... Ts> using void_t = typename make_void<Ts...>::type;
-
-	template< class, class = void_t<> >
-	struct has_type_member : std::false_type { };
-
-	template< class T >
-	struct has_type_member<T, void_t<typename T::type>> : std::true_type { };
 }
 
 template <typename F, typename ACC, typename CONTAINER>
@@ -164,3 +158,5 @@ inline decltype(auto) reduce()
 }
 
 } // namespace fpcpp
+
+#endif // Include Guard
