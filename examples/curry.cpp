@@ -15,8 +15,13 @@ int main()
 	auto mulL = [](int i, int j, int k, int m) { return i * j * k * m; };
 
 	auto curried = curry(mulL, 3, 4, _1, _2);
-	std::cout << curried(5, 2) << std::endl;
-	std::cout << curried(1, _3)(false, "IBM", 2) << std::endl;
+	std::cout
+		<< curried(5, 2) << std::endl
+		<< curried(1, _3)(false, "IBM", 2) << std::endl
+		<< curried(1)(3) << std::endl
+		<< curried(1)(4, false, "IBM") << std::endl
+		;
+
 
 	return 0;
 }

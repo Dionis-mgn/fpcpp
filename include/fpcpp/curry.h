@@ -5,6 +5,7 @@
 
 #include "cpp17.h"
 #include "common.h"
+#include "placeholder.h"
 
 namespace fpcpp
 {
@@ -17,10 +18,30 @@ namespace impl
 		template <typename ... NewArgs>
 		struct TypeMerger
 		{
-			template <size_t PLACE, typename T>
+			template <int PLACE, typename T>
 			struct PlaceholderReplacer
 			{
-				using type = typename std::tuple_element<PLACE - 1, std::tuple<NewArgs...>>::type;
+				template <typename COMPLETE, int DIFF>
+				struct Impl;
+
+				// We able to take argument from new arguiments
+				template <int DIFF>
+				struct Impl<std::true_type, DIFF>
+				{
+					using type = typename std::tuple_element<PLACE - 1, std::tuple<NewArgs...>>::type;
+				};
+
+				// We have to wait argument even more
+				template <int DIFF>
+				struct Impl<std::false_type, DIFF>
+				{
+					using type = Placeholder<DIFF>;
+				};
+
+				static constexpr int new_args_length = sizeof...(NewArgs);
+
+				using complete_t = std::conditional_t<new_args_length >= PLACE, std::true_type, std::false_type>;
+				using type = typename Impl<complete_t, PLACE - new_args_length>::type;
 			};
 
 			template <typename T>
@@ -42,10 +63,23 @@ namespace impl
 		template <int PLACE>
 		struct TupleElement
 		{
+			template <typename ... NewArgs>
+			static decltype(auto) _getPlaceholder(const std::tuple<NewArgs...> &_new, std::true_type)
+			{
+				return std::get<PLACE - 1>(_new);
+			}
+
+			template <typename ... NewArgs>
+			static decltype(auto) _getPlaceholder(const std::tuple<NewArgs...> &_new, std::false_type)
+			{
+				return Placeholder<PLACE - sizeof...(NewArgs)>();
+			}
+
 			template <size_t I, typename ... NewArgs>
 			static decltype(auto) _getTupleElement(const std::tuple<AccArgs...> &, const std::tuple<NewArgs...> &_new, std::true_type)
 			{
-				return std::get<PLACE - 1>(_new);
+				using complete_t = std::conditional_t<sizeof...(NewArgs) >= PLACE, std::true_type, std::false_type>;
+				return _getPlaceholder<NewArgs...>(_new, complete_t());
 			}
 
 			template <size_t I, typename ... NewArgs>
@@ -105,7 +139,7 @@ namespace impl
 			return applyTuple(f, newTuple, index_type(), noPH()); // std::move?
 		};
 	}
-}
+} // namespace impl
 
 template <typename F, typename ... ARGS>
 decltype(auto) curry(F f, ARGS... args)
@@ -123,6 +157,6 @@ decltype(auto) curry(F f, ARGS... args)
 	};
 }
 
-}
+} // namespace fpcpp
 
 #endif
