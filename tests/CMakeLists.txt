@@ -4,6 +4,7 @@ set(SOURCES
 	add.cpp
 	always.cpp
 	complement.cpp
+	curry.cpp
 	F.cpp
 	filter.cpp
 	identity.cpp

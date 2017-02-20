@@ -1,6 +1,8 @@
 #ifndef FPCPP_LOGIC_H_
 #define FPCPP_LOGIC_H_
 
+#include <utility>
+
 namespace fpcpp
 {
 

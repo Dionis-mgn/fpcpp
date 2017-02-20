@@ -3,8 +3,8 @@
 
 #include <functional>
 
-#include "cpp17.h"
 #include "common.h"
+#include "cpp17.h"
 #include "placeholder.h"
 
 namespace fpcpp
@@ -12,10 +12,10 @@ namespace fpcpp
 
 namespace impl
 {
-	template <typename ... AccArgs>
+	template <typename ... ACC_ARGS>
 	struct TupleMergerer
 	{
-		template <typename ... NewArgs>
+		template <typename ... NEW_ARGS>
 		struct TypeMerger
 		{
 			template <int PLACE, typename T>
@@ -28,7 +28,7 @@ namespace impl
 				template <int DIFF>
 				struct Impl<std::true_type, DIFF>
 				{
-					using type = typename std::tuple_element<PLACE - 1, std::tuple<NewArgs...>>::type;
+					using type = typename std::tuple_element<PLACE - 1, std::tuple<NEW_ARGS...>>::type;
 				};
 
 				// We have to wait argument even more
@@ -38,7 +38,7 @@ namespace impl
 					using type = Placeholder<DIFF>;
 				};
 
-				static constexpr int new_args_length = sizeof...(NewArgs);
+				static constexpr int new_args_length = sizeof...(NEW_ARGS);
 
 				using complete_t = std::conditional_t<new_args_length >= PLACE, std::true_type, std::false_type>;
 				using type = typename Impl<complete_t, PLACE - new_args_length>::type;
@@ -57,55 +57,73 @@ namespace impl
 				using type = typename PlaceholderReplacer<place, T>::type;
 			};
 
-			using type = typename std::tuple<typename TypeSelector<AccArgs>::type...>;
+			using type = typename std::tuple<typename TypeSelector<ACC_ARGS>::type...>;
 		};
 
 		template <int PLACE>
 		struct TupleElement
 		{
-			template <typename ... NewArgs>
-			static decltype(auto) _getPlaceholder(const std::tuple<NewArgs...> &_new, std::true_type)
+			template <typename ... NEW_ARGS>
+			static decltype(auto) _getPlaceholder(const std::tuple<NEW_ARGS...> &_new, std::true_type)
 			{
 				return std::get<PLACE - 1>(_new);
 			}
 
-			template <typename ... NewArgs>
-			static decltype(auto) _getPlaceholder(const std::tuple<NewArgs...> &_new, std::false_type)
+			template <typename ... NEW_ARGS>
+			static decltype(auto) _getPlaceholder(const std::tuple<NEW_ARGS...> &_new, std::false_type)
 			{
-				return Placeholder<PLACE - sizeof...(NewArgs)>();
+				return Placeholder<PLACE - sizeof...(NEW_ARGS)>();
 			}
 
-			template <size_t I, typename ... NewArgs>
-			static decltype(auto) _getTupleElement(const std::tuple<AccArgs...> &, const std::tuple<NewArgs...> &_new, std::true_type)
+			template <size_t I, typename ... NEW_ARGS>
+			static decltype(auto) _getTupleElement(const std::tuple<ACC_ARGS...> &, const std::tuple<NEW_ARGS...> &_new, std::true_type)
 			{
-				using complete_t = std::conditional_t<sizeof...(NewArgs) >= PLACE, std::true_type, std::false_type>;
-				return _getPlaceholder<NewArgs...>(_new, complete_t());
+				using complete_t = std::conditional_t<sizeof...(NEW_ARGS) >= PLACE, std::true_type, std::false_type>;
+				return _getPlaceholder<NEW_ARGS...>(_new, complete_t());
 			}
 
-			template <size_t I, typename ... NewArgs>
-			static decltype(auto) _getTupleElement(const std::tuple<AccArgs...> &acc, const std::tuple<NewArgs...> &, std::false_type)
+			template <size_t I, typename ... NEW_ARGS>
+			static decltype(auto) _getTupleElement(const std::tuple<ACC_ARGS...> &acc, const std::tuple<NEW_ARGS...> &, std::false_type)
 			{
 				return std::get<I>(acc);
 			}
 		};
 
-		template <size_t I, typename ... NewArgs>
-		static decltype(auto) getTupleElement(const std::tuple<AccArgs...> &acc, const std::tuple<NewArgs...> &_new)
+		template <size_t I, typename ... NEW_ARGS>
+		static decltype(auto) getTupleElement(const std::tuple<ACC_ARGS...> &acc, const std::tuple<NEW_ARGS...> &_new)
 		{
-			using element_type = typename std::tuple_element<I, std::tuple<AccArgs...>>::type;
+			using element_type = typename std::tuple_element<I, std::tuple<ACC_ARGS...>>::type;
 			constexpr int place = std::is_placeholder<element_type>::value;
 			using placeholder = typename std::conditional<place != 0, std::true_type, std::false_type>::type;
 
 			return TupleElement<place>::template _getTupleElement<I> (acc, _new, placeholder());
 		}
 
-		template <typename ... NewArgs, std::size_t ... Indexes>
-		static decltype(auto) mergeTuples(const std::tuple<AccArgs...> &acc
-		                                 ,const std::tuple<NewArgs...> &_new
+		template <typename ... NEW_ARGS, std::size_t ... Indexes>
+		static decltype(auto) mergeTuples(const std::tuple<ACC_ARGS...> &acc
+		                                 ,const std::tuple<NEW_ARGS...> &_new
 		                                 ,IndexTuple<Indexes...>)
 		{
-			return typename TypeMerger<NewArgs...>::type(getTupleElement<Indexes>(acc, _new)...);
+			return typename TypeMerger<NEW_ARGS...>::type(getTupleElement<Indexes>(acc, _new)...);
 		}
+
+		template <typename FIRST, typename ... ARGS>
+		struct MaxPlaceholder
+		{
+		private:
+			static constexpr size_t fvalue = MaxPlaceholder<FIRST>::value;
+			static constexpr size_t avalue = MaxPlaceholder<ARGS...>::value;
+		public:
+			static constexpr size_t value = std::max(fvalue, avalue);
+		};
+
+		template <typename ARG>
+		struct MaxPlaceholder<ARG>
+		{
+			static constexpr size_t value = std::is_placeholder<ARG>::value;
+		};
+
+		static constexpr size_t expected_arity = MaxPlaceholder<ACC_ARGS...>::value;
 	};
 
 	template <typename>
@@ -119,42 +137,37 @@ namespace impl
 	};
 
 	// Final call of curried function
-	template <typename F, typename ... ARGS, std::size_t... Indexes>
-	decltype(auto) applyTuple(F f, std::tuple<ARGS...> args, IndexTuple<Indexes...>, std::true_type)
+	template <typename F, typename ... ARGS, std::size_t... INDEXES>
+	inline decltype(auto) do_curry(F f, std::tuple<ARGS...> args, IndexTuple<INDEXES...>, std::true_type)
 	{
-		return f(std::get<Indexes>(args)...);
+		return f(std::get<INDEXES>(args)...);
 	}
 
 	// There are still placeholders in arg list. Generate new function.
-	template <typename F, typename ... ARGS, std::size_t... Indexes>
-	decltype(auto) applyTuple(F f, std::tuple<ARGS...> args, IndexTuple<Indexes...>, std::false_type)
+	template <typename F, typename ... ARGS, std::size_t... INDEXES>
+	inline decltype(auto) do_curry(F f, std::tuple<ARGS...> args, IndexTuple<INDEXES...>, std::false_type)
 	{
 		return [f, args](auto ... cArgs)
 		{
+			static_assert(impl::TupleMergerer<ARGS...>::expected_arity >= sizeof...(cArgs), "Too many arguments for curried function");
+
 			using index_type = typename impl::BuildIndexTuple<sizeof...(ARGS)>::type;
 			std::tuple<decltype(cArgs)...> cTuple(cArgs...);
 			auto newTuple = TupleMergerer<ARGS...>::mergeTuples(args, cTuple, index_type());
 			using noPH = typename NoPlaceholders<decltype(newTuple)>::type;
 
-			return applyTuple(f, newTuple, index_type(), noPH()); // std::move?
+			return do_curry(f, newTuple, index_type(), noPH()); // std::move?
 		};
 	}
 } // namespace impl
 
 template <typename F, typename ... ARGS>
-decltype(auto) curry(F f, ARGS... args)
+inline decltype(auto) curry(F f, ARGS... args)
 {
 	std::tuple<decltype(args)...> tuple(args...);
+	using index_type = typename impl::BuildIndexTuple<sizeof...(ARGS)>::type;
 
-	return [f, tuple{std::move(tuple)}](auto... cArgs)
-	{
-		using index_type = typename impl::BuildIndexTuple<sizeof...(ARGS)>::type;
-		std::tuple<decltype(cArgs)...> cTuple(cArgs...);
-		auto newTuple = impl::TupleMergerer<ARGS...>::mergeTuples(tuple, cTuple, index_type());
-		using noPH = typename impl::NoPlaceholders<decltype(newTuple)>::type;
-
-		return impl::applyTuple(f, newTuple, index_type(), noPH()); // std::move?
-	};
+	return impl::do_curry(f, std::move(tuple), index_type(), std::false_type());
 }
 
 } // namespace fpcpp
