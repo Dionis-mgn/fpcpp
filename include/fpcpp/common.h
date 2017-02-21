@@ -11,31 +11,31 @@ namespace fpcpp
 namespace impl
 {
 
-template< class, class = void_t<> >
+template <typename, typename = void_t<>>
 struct has_type_member : std::false_type { };
 
-template< class T >
+template <typename T>
 struct has_type_member<T, void_t<typename T::type>> : std::true_type { };
 
-template<size_t... Indexes>
+template <size_t... Indexes>
 struct IndexTuple
 {
 	using next = IndexTuple<Indexes..., sizeof...(Indexes)>;
 };
 
-template<size_t Num>
+template <size_t Num>
 struct BuildIndexTuple
 {
 	using type = typename BuildIndexTuple<Num - 1>::type::next;
 };
 
-template<>
+template <>
 struct BuildIndexTuple<0>
 {
 	using type = IndexTuple<>;
 };
 
-template<typename T>
+template <typename T>
 struct function_trait;
 
 template <typename RESULT, typename ... ARGS>
