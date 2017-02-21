@@ -6,6 +6,46 @@
 namespace fpcpp
 {
 
+template <typename F, typename CONTAINER>
+inline bool all(F f, CONTAINER container)
+{
+	for (const auto &val : container)
+	{
+		if (!f(val))
+			return false;
+	}
+	return true;
+}
+
+template <typename F>
+inline decltype(auto) all(F f)
+{
+	return [f](auto container)
+	{
+		return all(f, container);
+	};
+};
+
+template <typename F, typename CONTAINER>
+inline bool any(F f, CONTAINER container)
+{
+	for (const auto &val : container)
+	{
+		if (f(val))
+			return true;
+	}
+	return false;
+}
+
+template <typename F>
+inline decltype(auto) any(F f)
+{
+	return [f](auto container)
+	{
+		return any(f, container);
+	};
+};
+
 template <template<typename...> class T, typename F, typename ...T_ARGS>
 inline decltype(auto) map(F f, const T<T_ARGS...> &t)
 {

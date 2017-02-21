@@ -2,7 +2,9 @@ project(fpcpp_tests)
 
 set(SOURCES
 	add.cpp
+	all.cpp
 	always.cpp
+	any.cpp
 	complement.cpp
 	curry.cpp
 	F.cpp
