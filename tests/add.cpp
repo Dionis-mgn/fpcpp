@@ -41,8 +41,13 @@ TEST(add, strings)
 
 	EXPECT_EQ(add(te, st), test);
 
-	auto curried = add(st);
-	EXPECT_EQ(curried(te), test);
+	auto curried = add(te);
+	EXPECT_EQ(curried(st), test);
+
+	using namespace std::placeholders;
+
+	auto curried2 = add(_1, st);
+	EXPECT_EQ(curried2(te), test);
 }
 
 TEST(add, temporary_strings)

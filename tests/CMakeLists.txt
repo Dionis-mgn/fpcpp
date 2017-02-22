@@ -7,10 +7,16 @@ set(SOURCES
 	any.cpp
 	complement.cpp
 	curry.cpp
+	divide.cpp
+	equals.cpp
 	F.cpp
 	filter.cpp
+	gt.cpp
+	gte.cpp
 	identity.cpp
 	is_empty.cpp
+	lt.cpp
+	lte.cpp
 	main.cpp
 	map.cpp
 	multiply.cpp
@@ -19,6 +25,7 @@ set(SOURCES
 	reduce.cpp
 	reject.cpp
 	split.cpp
+	subtract.cpp
 	T.cpp
 	tap.cpp
 	trim.cpp
