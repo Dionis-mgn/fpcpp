@@ -5,7 +5,6 @@ set(SOURCES
 	all.cpp
 	always.cpp
 	any.cpp
-	both.cpp
 	complement.cpp
 	curry.cpp
 	divide.cpp
@@ -31,8 +30,6 @@ set(SOURCES
 	tap.cpp
 	trim.cpp
 )
-
-#SET (SOURCES gt.cpp)
 
 add_executable(fpcpp_tests ${SOURCES})
 target_link_libraries(fpcpp_tests gtest rapidcheck)
