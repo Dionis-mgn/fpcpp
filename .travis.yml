@@ -1,0 +1,46 @@
+language: cpp
+matrix:
+  include:
+    # Clang 3.8
+    - addons: &clang38
+        apt:
+          sources:
+            - george-edison55-precise-backports
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - cmake
+            - cmake-data
+            - gcc-5
+            - g++-5
+            - clang-3.8
+      compiler: clang
+      env: COMPILER_VERSION=3.8 BUILD_TYPE=Debug
+
+    - addons: *clang38
+      compiler: clang
+      env: COMPILER_VERSION=3.8 BUILD_TYPE=Release
+
+    # GCC 5.x
+    - addons: &gcc5
+        apt:
+          sources:
+            - george-edison55-precise-backports
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake
+            - cmake-data
+            - gcc-5
+            - g++-5
+      compiler: gcc
+      env: COMPILER_VERSION=5 BUILD_TYPE=Debug
+
+    - addons: *gcc5
+      compiler: gcc
+      env: COMPILER_VERSION=5 BUILD_TYPE=Release
+script:
+  - export CC="${CC}-${COMPILER_VERSION}"
+  - export CXX="${CXX}-${COMPILER_VERSION}"
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE .
+  - make
+  - ./bin/fpcpp_tests

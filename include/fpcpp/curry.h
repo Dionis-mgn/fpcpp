@@ -1,6 +1,7 @@
 #ifndef FPCPP_CURRY_H_
 #define FPCPP_CURRY_H_
 
+#include <algorithm>
 #include <functional>
 
 #include "common.h"
