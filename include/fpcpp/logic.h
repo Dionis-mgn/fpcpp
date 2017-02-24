@@ -6,12 +6,24 @@
 namespace fpcpp
 {
 
+template <typename F1, typename F2>
+inline decltype(auto) both(F1 f1, F2 f2)
+{
+	return [f1, f2](auto&& ... args)
+	{
+		auto res1 = f1(args...);
+		if (!res1)
+			return res1;
+		return f2(args...);
+	};
+}
+
 template <typename F>
 inline decltype(auto) complement(F f)
 {
-	return [f](auto&&... arg)
+	return [f](auto&&... args)
 	{
-		return !f(std::forward<decltype(arg)>(arg)...);
+		return !f(std::forward<decltype(args)>(args)...);
 	};
 }
 

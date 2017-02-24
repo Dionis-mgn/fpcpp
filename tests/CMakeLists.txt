@@ -5,6 +5,7 @@ set(SOURCES
 	all.cpp
 	always.cpp
 	any.cpp
+	both.cpp
 	complement.cpp
 	curry.cpp
 	divide.cpp
