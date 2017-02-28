@@ -15,7 +15,7 @@ TEST(tap, return_value)
 TEST(tap, can_produce_side_effects)
 {
 	uint32_t sideEffect = 10;
-	auto tapper = [&sideEffect](uint32_t i) { sideEffect *= i; };
+	auto tapper         = [&sideEffect](uint32_t i) { sideEffect *= i; };
 
 	tap(tapper, 5);
 

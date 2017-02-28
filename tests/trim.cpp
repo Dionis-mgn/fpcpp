@@ -12,8 +12,8 @@ namespace _trim
 RC_GTEST_PROP(trim, first_last_chars_not_spaces, (const std::string &src))
 {
 	std::string fromBegin = trimB(src);
-	std::string fromEnd = trimE(src);
-	std::string full = trim(src);
+	std::string fromEnd   = trimE(src);
+	std::string full      = trim(src);
 
 	if (full.empty())
 	{

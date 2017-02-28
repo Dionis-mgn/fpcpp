@@ -8,8 +8,7 @@ using namespace fpcpp;
 namespace _split
 {
 
-auto allEmpty = [](const auto &container)
-{
+auto allEmpty = [](const auto &container) {
 	for (auto &v : container)
 	{
 		if (!v.empty())
@@ -20,7 +19,7 @@ auto allEmpty = [](const auto &container)
 
 TEST(split, split_keywords)
 {
-	std::string source = "test,keywords,bingo!";
+	std::string              source   = "test,keywords,bingo!";
 	std::vector<std::string> expected = {"test", "keywords", "bingo!"};
 
 	EXPECT_EQ(split(',', source), expected);

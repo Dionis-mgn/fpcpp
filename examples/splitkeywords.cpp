@@ -8,8 +8,7 @@ using keywordList = std::vector<std::string>;
 
 int main()
 {
-	auto debugPrint = [](const auto &v)
-	{
+	auto debugPrint = [](const auto &v) {
 		std::cout << "---CONTAINER---" << std::endl;
 		for (auto &i : v)
 			std::cout << i << std::endl;
@@ -18,8 +17,7 @@ int main()
 		return v;
 	};
 
-	auto valueFormatter = [](const std::string &value, keywordList &accumulator)
-	{
+	auto valueFormatter = [](const std::string &value, keywordList &accumulator) {
 		std::string trimmed = trim(value);
 		if (!trimmed.empty())
 			accumulator.push_back(trimmed);
@@ -27,11 +25,8 @@ int main()
 
 	keywordList acc;
 
-	auto splitKeywords = pipe(
-		split(',')
-		,reduce(valueFormatter, acc)
-		,debugPrint
-	);
+	auto splitKeywords =
+	  pipe(split(','), reduce(valueFormatter, acc), debugPrint);
 
 	const std::string testStr = "  all ,this,, , keywords, should,   ,,be printed"
 	                            ", separately   , without trailing ws,,,Yep!    ";

@@ -12,7 +12,7 @@ namespace _reduce
 TEST(reduce, simple_vector_operations)
 {
 	using container_t = std::vector<uint32_t>;
-	container_t input { 1, 2, 3, 4, 5 };
+	container_t input{1, 2, 3, 4, 5};
 
 	EXPECT_EQ(reduce(add(), 0)(input), 15);
 	EXPECT_EQ(reduce(multiply(), 1)(input), 120);
@@ -27,8 +27,8 @@ TEST(reduce, return_accumulator_for_an_empty_container)
 TEST(reduce, currying)
 {
 	using container_t = std::vector<uint32_t>;
-	container_t input { 1, 2, 3, 4, 5 };
-	uint32_t expected = 15;
+	container_t input{1, 2, 3, 4, 5};
+	uint32_t    expected = 15;
 
 	uint32_t r1 = reduce(add(), 0, input);
 	uint32_t r2 = reduce(add(), 0)(input);

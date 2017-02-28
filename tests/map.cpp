@@ -1,17 +1,17 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
 
-#include <string>
 #include <cstdint>
+#include <string>
 #include <type_traits>
 
 #include "fpcpp.h"
 using namespace fpcpp;
 
 RC_GTEST_PROP(map, identity_map_equals_to_original,
-	(const std::vector<std::string> &original))
+              (const std::vector<std::string> &original))
 {
-	auto fn = map(identity());
+	auto fn     = map(identity());
 	auto mapped = fn(original);
 	RC_ASSERT(mapped == original);
 }
@@ -25,9 +25,9 @@ TEST(map, simple_math_mapping)
 {
 	using container_t = std::vector<uint32_t>;
 
-	container_t input     { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	container_t expected1 { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-	container_t expected2 { 0, 2, 4, 6, 8,10,12,14,16 };
+	container_t input{1, 2, 3, 4, 5, 6, 7, 8, 9};
+	container_t expected1{0, 1, 2, 3, 4, 5, 6, 7, 8};
+	container_t expected2{0, 2, 4, 6, 8, 10, 12, 14, 16};
 
 	auto vecX2  = map(x2);
 	auto vecD2  = map(d2);
@@ -44,18 +44,22 @@ TEST(map, simple_math_mapping)
 	EXPECT_EQ(r3, expected1);
 	EXPECT_EQ(r4, input);
 
-	static_assert(std::is_same<container_t, decltype(r1)>::value, "map returns wrong container type");
-	static_assert(std::is_same<container_t, decltype(r2)>::value, "map returns wrong container type");
-	static_assert(std::is_same<container_t, decltype(r3)>::value, "map returns wrong container type");
-	static_assert(std::is_same<container_t, decltype(r4)>::value, "map returns wrong container type");
+	static_assert(std::is_same<container_t, decltype(r1)>::value,
+	              "map returns wrong container type");
+	static_assert(std::is_same<container_t, decltype(r2)>::value,
+	              "map returns wrong container type");
+	static_assert(std::is_same<container_t, decltype(r3)>::value,
+	              "map returns wrong container type");
+	static_assert(std::is_same<container_t, decltype(r4)>::value,
+	              "map returns wrong container type");
 }
 
 TEST(map, empty_container)
 {
 	using container_t = std::list<uint32_t>;
-	container_t input { };
+	container_t input{};
 
-	auto fn = map(x2);
+	auto fn     = map(x2);
 	auto output = fn(input);
 
 	EXPECT_EQ(input, output);
@@ -64,10 +68,10 @@ TEST(map, empty_container)
 TEST(map, lambda)
 {
 	using container_t = std::vector<std::string>;
-	container_t input    {"test" , "test2" };
-	container_t expected {"test!", "test2!"};
+	container_t input{"test", "test2"};
+	container_t expected{"test!", "test2!"};
 
-	auto fn = map([](const std::string &s){ return s + '!'; });
+	auto fn     = map([](const std::string &s) { return s + '!'; });
 	auto output = fn(input);
 
 	EXPECT_EQ(output, expected);
@@ -75,15 +79,18 @@ TEST(map, lambda)
 
 struct ToStringFunctor
 {
-	std::string operator () (uint32_t v) { return std::to_string(v); }
+	std::string operator()(uint32_t v)
+	{
+		return std::to_string(v);
+	}
 };
 
 TEST(map, functor)
 {
-	std::vector<uint32_t>    input    { 1 , 2 , 3 };
-	std::vector<std::string> expected {"1","2","3"};
+	std::vector<uint32_t>    input{1, 2, 3};
+	std::vector<std::string> expected{"1", "2", "3"};
 
-	auto fn = map(ToStringFunctor());
+	auto fn     = map(ToStringFunctor());
 	auto output = fn(input);
 
 	EXPECT_EQ(output, expected);
@@ -92,10 +99,10 @@ TEST(map, functor)
 TEST(map, currying)
 {
 	using container_t = std::vector<uint32_t>;
-	container_t input    { 1, 2, 3, 4, 5 };
-	container_t expected { 2, 4, 6, 8,10 };
+	container_t input{1, 2, 3, 4, 5};
+	container_t expected{2, 4, 6, 8, 10};
 
-	auto curried = map(x2);
+	auto curried         = map(x2);
 	auto curriedResult   = curried(input);
 	auto uncurriedResult = map(x2, input);
 

@@ -11,9 +11,14 @@ namespace fpcpp
 template <int N>
 struct Placeholder : public std::integral_constant<int, N>
 {
-	Placeholder() { }
-	template <typename T, typename = std::enable_if_t<std::is_placeholder<T>::value == N>>
-	Placeholder(const T&) { }
+	Placeholder()
+	{
+	}
+	template <typename T,
+	          typename = std::enable_if_t<std::is_placeholder<T>::value == N>>
+	Placeholder(const T &)
+	{
+	}
 };
 
 template <typename T>
@@ -26,13 +31,16 @@ struct PlaceholderConverter
 };
 
 template <typename T>
-inline decltype(auto) toPlaceholder(const T& t, typename std::enable_if_t<std::is_placeholder<T>::value != 0>* = 0)
+inline decltype(auto)
+toPlaceholder(const T &t,
+              std::enable_if_t<std::is_placeholder<T>::value != 0> * = 0)
 {
 	return Placeholder<std::is_placeholder<T>::value>();
 }
 
 template <typename T>
-inline T toPlaceholder(T&& t, typename std::enable_if_t<std::is_placeholder<T>::value == 0>* = 0)
+inline T
+toPlaceholder(T &&t, std::enable_if_t<std::is_placeholder<T>::value == 0> * = 0)
 {
 	return t;
 }
@@ -42,11 +50,17 @@ inline T toPlaceholder(T&& t, typename std::enable_if_t<std::is_placeholder<T>::
 namespace std
 {
 
-template<int N>
+template <int N>
 struct is_placeholder<fpcpp::Placeholder<N>> : std::integral_constant<int, N>
 {
-	operator int    () { return decltype(*this)::value; }
-	int operator () () { return decltype(*this)::value; }
+	operator int()
+	{
+		return decltype(*this)::value;
+	}
+	int operator()()
+	{
+		return decltype(*this)::value;
+	}
 };
 
 } // namespace std

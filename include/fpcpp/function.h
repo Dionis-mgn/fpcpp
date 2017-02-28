@@ -8,27 +8,18 @@ namespace fpcpp
 
 inline decltype(auto) F()
 {
-	return [](auto... v)
-	{
-		return false;
-	};
+	return [](auto... v) { return false; };
 }
 
 inline decltype(auto) T()
 {
-	return [](auto... v)
-	{
-		return true;
-	};
+	return [](auto... v) { return true; };
 }
 
 template <typename T>
 inline decltype(auto) always(const T &value)
 {
-	return [value](auto&& ... x)
-	{
-		return value;
-	};
+	return [value](auto &&... x) { return value; };
 }
 
 namespace impl
@@ -39,21 +30,18 @@ namespace impl
 		return t;
 	}
 
-	template <typename T, typename ... OTHER>
-	inline T identity(T t, OTHER ...)
+	template <typename T, typename... OTHER>
+	inline T identity(T t, OTHER...)
 	{
 		return t;
 	}
 }
 
-//C++17 variant
-//inline auto identity = [](auto v) { return v; };
+// C++17 variant
+// inline auto identity = [](auto v) { return v; };
 inline decltype(auto) identity()
 {
-	return [](auto ... v)
-	{
-		return impl::identity(v...);
-	};
+	return [](auto... v) { return impl::identity(v...); };
 }
 
 namespace impl
@@ -64,18 +52,17 @@ namespace impl
 		return func(std::forward<ARG>(arg));
 	}
 
-	template <typename FUNC, typename ARG, typename ... OTHER>
-	inline decltype(auto) pipe(ARG &&arg, FUNC func, OTHER ... other)
+	template <typename FUNC, typename ARG, typename... OTHER>
+	inline decltype(auto) pipe(ARG &&arg, FUNC func, OTHER... other)
 	{
 		return pipe(func(std::forward<ARG>(arg)), other...);
 	}
 } // namespace impl
 
-template <typename FIRST, typename ... OTHER>
-inline decltype(auto) pipe(FIRST first, OTHER ... other)
+template <typename FIRST, typename... OTHER>
+inline decltype(auto) pipe(FIRST first, OTHER... other)
 {
-	return [first, other...](auto&& ... args) mutable
-	{
+	return [first, other...](auto &&... args) mutable {
 		return impl::pipe(first(std::forward<decltype(args)>(args)...), other...);
 	};
 }
@@ -92,8 +79,7 @@ inline T tap(F &&f, T &&t)
 template <typename F>
 inline decltype(auto) tap(F f)
 {
-	return [f](auto && t)
-	{
+	return [f](auto &&t) {
 		f(t);
 		return t;
 	};
@@ -101,10 +87,8 @@ inline decltype(auto) tap(F f)
 
 inline decltype(auto) tap()
 {
-	return [](auto&&... args)
-	{
-		return tap(std::forward<decltype(args)>(args)...);
-	};
+	return
+	  [](auto &&... args) { return tap(std::forward<decltype(args)>(args)...); };
 }
 
 } // namespace fpcpp

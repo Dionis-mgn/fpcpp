@@ -7,14 +7,15 @@
 namespace fpcpp
 {
 
-inline std::vector<std::string> split(std::string::value_type separator, const std::string &source)
+inline std::vector<std::string> split(std::string::value_type separator,
+                                      const std::string &     source)
 {
 	std::vector<std::string> result;
 
 	// creepy, but pretty effective implementation. No FP at all.
 	auto start = source.data();
-	auto end = start + source.size();
-	auto curr = start;
+	auto end   = start + source.size();
+	auto curr  = start;
 
 	while (curr < end)
 	{
@@ -42,30 +43,30 @@ inline std::vector<std::string> split(const std::string &source)
 
 inline decltype(auto) split(std::string::value_type separator)
 {
-	return [separator](const std::string &source)
-	{
-		return split(separator, source);
-	};
+	return
+	  [separator](const std::string &source) { return split(separator, source); };
 }
 
 inline decltype(auto) split()
 {
-	return [](auto&&... args)
-	{
+	return [](auto &&... args) {
 		return split(std::forward<decltype(args)>(args)...);
 	};
 }
 
 // trim from beginning
-inline std::string trimB(const std::string &s) {
+inline std::string trimB(const std::string &s)
+{
 	auto i = s.begin();
-	while (i != s.end() && std::isspace(*i)) i++;
+	while (i != s.end() && std::isspace(*i))
+		i++;
 
-	return std::string (i, s.end());
+	return std::string(i, s.end());
 }
 
 // trim from end
-inline std::string trimE(const std::string &s) {
+inline std::string trimE(const std::string &s)
+{
 	auto i = s.end();
 
 	if (i == s.begin())
@@ -74,19 +75,20 @@ inline std::string trimE(const std::string &s) {
 	do
 	{
 		i--;
-	}
-	while (i != s.begin() && std::isspace(*i));
+	} while (i != s.begin() && std::isspace(*i));
 
 	if (std::isspace(*i))
 		return "";
 
-	return std::string (s.begin(), i + 1);
+	return std::string(s.begin(), i + 1);
 }
 
 // trim from both ends
-inline std::string trim(const std::string &s) {
+inline std::string trim(const std::string &s)
+{
 	auto is = s.begin();
-	while (is != s.end() && std::isspace(*is)) is++;
+	while (is != s.end() && std::isspace(*is))
+		is++;
 
 	if (is == s.end())
 		return "";
@@ -95,10 +97,9 @@ inline std::string trim(const std::string &s) {
 	do
 	{
 		ie--;
-	}
-	while (std::isspace(*ie));
+	} while (std::isspace(*ie));
 
-	return std::string (is, ie + 1);
+	return std::string(is, ie + 1);
 }
 
 } // namespace fpcpp
